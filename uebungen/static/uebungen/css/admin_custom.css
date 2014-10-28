@@ -1,0 +1,5 @@
+/* Das Feld fuer die Anwesenheitsliste ist sonst zu klein */
+#id_anwesenheit_from {
+    height: 40em;
+}
+
