@@ -19,8 +19,7 @@ def export():
             student.fehltermine(),
         ]
         for serie in range(1,13):
-            abgabe = Abgabe.objects.filter(Q(serie=serie) & (Q(student_A=student) | Q(student_B=student))).first()
-            row.append(abgabe.points if abgabe else "")
+            row.append(student.abgabe_points(serie))
 
         kolloquien = Kolloquium.objects.filter(student=student)
         for kolloquium in kolloquien:

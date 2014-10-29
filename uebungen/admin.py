@@ -21,13 +21,40 @@ class ExtrapunkteInline(admin.TabularInline):
     model = Extrapunkte
     extra = 1
     
-   
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'matrikel', "stu_mail", 'points', 'abgabe_points', 'kolloquium_points', 'extra_points', )
+    list_display = ('name', 'matrikel', "stu_mail", 'points', 'abgaben_points', 'kolloquien_points', 'extra_points', )
+
     inlines = [
         ExtrapunkteInline,
         KolloquiumInline,
     ]
+   
+class StudentDetailAdmin(admin.ModelAdmin):
+    # Mit dieser Funktion  umgeht man die beschraenkung dass django keine Parameter uebergibt
+    # serie_num(1) gibt eine function, die die Punkte fuer Serie 1 liefert
+    def serie_num(num):
+        def fun(self):
+            return self.abgabe_points(num)
+        fun.short_description = u'Serie ' + unicode(num)
+        return fun
+    
+    def kolloquium_num(num):
+        def fun(self):
+            return self.kolloquium_points(num)
+        fun.short_description = u'Kolloquium ' + unicode(num+1)
+        return fun
+        
+    #list_display = ('name', 'matrikel', "stu_mail", 'points', 'abgabe_points', 'kolloquium_points', 'extra_points', )
+    list_display = ['matrikel', 'first_name', 'last_name', 'email', 'fehltermine',]
+    for i in range(1,13):
+        list_display.append(serie_num(i))
+    list_display.extend([kolloquium_num(0), kolloquium_num(1), 'klausur_points'])
+    
+    inlines = [
+        ExtrapunkteInline,
+        KolloquiumInline,
+    ]
+
     
 class UebungAdmin(admin.ModelAdmin):
     class Media:
@@ -40,12 +67,20 @@ class UebungAdmin(admin.ModelAdmin):
     inlines = [
         ExtrapunkteInline,
     ]
-    
+
+class AnwesenheitslisteAdmin(admin.ModelAdmin):
+    def uebung_num(num):
+        def fun(self):
+            return self.kolloquium_points(num)
+        fun.short_description = u'Kolloquium ' + unicode(num+1)
+        return fun
     
 admin.site.register(Student, StudentAdmin)
+admin.site.register(DetailStudent, StudentDetailAdmin)
 admin.site.register(Abgabe, AbgabeAdmin)
 admin.site.register(Kolloquium, KolloquiumAdmin)
 admin.site.register(Uebung, UebungAdmin)
+#admin.site.register(Anwesenheitsliste, AnwesenheitslisteAdmin)
 
 
 

@@ -4,10 +4,9 @@ from django.db.models import Sum, Q
 # Create your models here.
 
 
-
 class Student(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, verbose_name = u'Vorname')
+    last_name = models.CharField(max_length=50, verbose_name = u'Nachname')
     matrikel = models.IntegerField()
     stu_mail = models.EmailField()
     mail = models.EmailField(null=True, blank=True)
@@ -26,29 +25,66 @@ class Student(models.Model):
         return extra_points if extra_points else 0
     extra_points.short_description = "Mitarbeit"
     
-    def kolloquium_points(self):
-        kolloquium_points = Kolloquium.objects.filter(student=self).all().aggregate(Sum('points'))['points__sum']
+    def kolloquien_points(self):
+        kolloquium_points = Kolloquium.objects.filter(student=self).aggregate(Sum('points'))['points__sum']
         return kolloquium_points if kolloquium_points else 0
-    kolloquium_points.short_description = "Kolloquien"
+    kolloquien_points.short_description = "Kolloquien"
+
+    def kolloquium(self, num):
+        kols = Kolloquium.objects.filter(student=self)
+        if kols.count() > num:
+            return kols.all()[num]
+        else:
+            return None
         
-    def abgabe_points(self):
-        abgabe_points = Abgabe.objects.filter(Q(student_A=self) | Q(student_B=self)).all().aggregate(Sum('points'))['points__sum']
+    def kolloquium_points(self, num):
+        kol = self.kolloquium(num)
+        return kol.points if kol else None
+        
+    def abgaben_points(self):
+        abgabe_points = self.abgaben().aggregate(Sum('points'))['points__sum']
         return abgabe_points if abgabe_points else 0
-    abgabe_points.short_description = "Serien"    
+    abgaben_points.short_description = "Serien"    
+    
+    def abgaben(self):
+        return Abgabe.objects.filter(Q(student_A=self) | Q(student_B=self))
+    
+    def abgabe(self, num):
+        return self.abgaben().filter(serie=num).first()
+        
+    def abgabe_points(self, num):
+        abgabe = self.abgabe(num)
+        return abgabe.points if abgabe else None
         
     """ Gibt die Punkte zurueck, die dieser Student erreicht hat """
     def points(self):
-        return self.extra_points() + self.kolloquium_points() + self.abgabe_points()
+        return self.extra_points() + self.kolloquien_points() + self.abgaben_points()
     points.short_description = "Punkte"   
       
     def email(self):
         return self.mail if self.mail else self.stu_mail
-        
+    
+     
     def fehltermine(self):
         return Uebung.objects.count() - Uebung.objects.filter(anwesenheit__in=[self]).count()
     
     def __unicode__(self):
         return self.name()
+
+# wird nur benutzt um ein zweites Studentenmodel im Admin zu registrieren
+class DetailStudent(Student):
+    class Meta:
+        verbose_name = "Punkte"
+        verbose_name_plural = "Punkte"
+        proxy = True
+        
+# wird nur benutzt um ein zweites Studentenmodel im Admin zu registrieren
+class Anwesenheitsliste(Student):
+    class Meta:
+        verbose_name = verbose_name_plural = "Anwesenheitsliste"
+        proxy = True
+    
+
        
 class Abgabe(models.Model):
     student_A = models.ForeignKey('Student', related_name='abgabe_a')
@@ -98,4 +134,6 @@ class Extrapunkte(models.Model):
     class Meta:
         verbose_name = "Extrapunkte"
         verbose_name_plural = "Extrapunkte"
+        
+        
 
