@@ -54,6 +54,18 @@ ROOT_URLCONF = 'django_digisys.urls'
 
 WSGI_APPLICATION = 'django_digisys.wsgi.application'
 
+# django suit
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'DigiSys Admin',
+    'MENU': (
+
+        # Keep original label and models
+        'sites',
+        { 'app': 'auth' },
+        { 'app': 'uebungen' },
+        { 'label': 'Export', 'url': '/digisys/', 'icon': 'icon-hand-right' },
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases

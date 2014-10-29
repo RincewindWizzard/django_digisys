@@ -11,6 +11,7 @@ class Student(models.Model):
     matrikel = models.IntegerField()
     stu_mail = models.EmailField()
     mail = models.EmailField(null=True, blank=True)
+    klausur_points = models.IntegerField(default=None, null=True, blank=True, verbose_name = u'Klausurpunkte')
     
     class Meta:
         verbose_name = "Student"
@@ -40,6 +41,12 @@ class Student(models.Model):
         return self.extra_points() + self.kolloquium_points() + self.abgabe_points()
     points.short_description = "Punkte"   
       
+    def email(self):
+        return self.mail if self.mail else self.stu_mail
+        
+    def fehltermine(self):
+        return Uebung.objects.count() - Uebung.objects.filter(anwesenheit__in=[self]).count()
+    
     def __unicode__(self):
         return self.name()
        
