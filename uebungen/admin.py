@@ -25,7 +25,7 @@ class ExtrapunkteInline(admin.TabularInline):
     extra = 1
     
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'matrikel', "stu_mail", 'points', 'abgaben_points', 'kolloquien_points', 'extra_points', )
+    list_display = ('name', 'matrikel', "email", 'points', 'abgaben_points', 'kolloquien_points', 'extra_points', )
 
     inlines = [
         ExtrapunkteInline,
