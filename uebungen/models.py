@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.db.models import Sum, Q
+
 # Create your models here.
 
 
@@ -10,7 +11,6 @@ class Student(models.Model):
     matrikel = models.IntegerField()
     stu_mail = models.EmailField()
     mail = models.EmailField(null=True, blank=True)
-    klausur_points = models.IntegerField(default=None, null=True, blank=True, verbose_name = u'Klausurpunkte')
     
     class Meta:
         verbose_name = "Student"
@@ -19,6 +19,9 @@ class Student(models.Model):
     
     def name(self):
         return unicode(self.first_name + " " + self.last_name)
+    
+    def klausur_points(self):
+        return min(int((self.points() / 1800.0) * 40) / 2, 20)
     
     def extra_points(self):
         extra_points = Extrapunkte.objects.filter(student=self).all().aggregate(Sum('points'))['points__sum']
@@ -135,5 +138,13 @@ class Extrapunkte(models.Model):
         verbose_name = "Extrapunkte"
         verbose_name_plural = "Extrapunkte"
         
-        
+
+class Notiz(models.Model):
+    text = models.CharField(max_length=2000, verbose_name = u'Text')
+    date = models.DateField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Notiz"
+        verbose_name_plural = "Notizen"
+    
 

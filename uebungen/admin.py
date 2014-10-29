@@ -2,6 +2,9 @@ from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.forms import SelectMultiple
 from models import *
+
+from django.forms import ModelForm
+
 # Register your models here.
 
 
@@ -48,7 +51,7 @@ class StudentDetailAdmin(admin.ModelAdmin):
     list_display = ['matrikel', 'first_name', 'last_name', 'email', 'fehltermine',]
     for i in range(1,13):
         list_display.append(serie_num(i))
-    list_display.extend([kolloquium_num(0), kolloquium_num(1), 'klausur_points'])
+    list_display.extend([kolloquium_num(0), kolloquium_num(1), 'extra_points', 'klausur_points'])
     
     inlines = [
         ExtrapunkteInline,
@@ -74,12 +77,27 @@ class AnwesenheitslisteAdmin(admin.ModelAdmin):
             return self.kolloquium_points(num)
         fun.short_description = u'Kolloquium ' + unicode(num+1)
         return fun
+
+"""
+class NotizForm(ModelForm):
+    class Meta:
+        widgets = {
+            'name': RedactorWidget(editor_options={'lang': 'de'})
+        }
+
+class NotizAdmin(admin.ModelAdmin):
+    form = NotizForm
+    fieldsets = [
+      ('Text', {'classes': ('full-width',), 'fields': ('text',)})
+    ]
+"""
     
 admin.site.register(Student, StudentAdmin)
 admin.site.register(DetailStudent, StudentDetailAdmin)
 admin.site.register(Abgabe, AbgabeAdmin)
 admin.site.register(Kolloquium, KolloquiumAdmin)
 admin.site.register(Uebung, UebungAdmin)
+#admin.site.register(Notiz, NotizAdmin)
 #admin.site.register(Anwesenheitsliste, AnwesenheitslisteAdmin)
 
 
