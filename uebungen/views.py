@@ -29,7 +29,7 @@ def export():
             row.append("")
             
         row.append(student.extra_points())         
-        row.append(student.klausur_points)
+        row.append(student.klausur_points())
         table.append(row)
     return table
 
