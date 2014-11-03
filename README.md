@@ -13,18 +13,17 @@ django_digisys benötigt folgende Bibliotheken:
 
 django (1.7), django-suit, unicodecsv
 
-Am einfachsten installiert man alles über pip:
-
-	pip install Django django-suit unicodecsv
+Wenn pip und python vorhanden sind, werden diese automatisch mit make installiert.
 
 
-Starten
-=======
 Folgende Befehle müssen im django_digisys/ Hauptordner ausgeführt werden:
 Installation der Umgebung:
 	
 	make
 
+
+Starten
+=======
 Es wird ein virtenv Ordner erstellt, in dem alle Bibliotheken installiert sind. Um ihn zu benutzen muss
 
 	source virtenv/bin/activate
