@@ -20,7 +20,11 @@ Am einfachsten installiert man alles über pip:
 
 Starten
 =======
+Folgende Befehle müssen im django_digisys/ Hauptordner ausgeführt werden:
+Um einen Datenbankadministrator zu erstellen:
 
-Um django_digisys im Developer-Modus zu starten führt man folgenden Befehl im django_digisys/ Orderner aus:
+	python manage.py createsuperuser
+
+Um django_digisys im Developer-Modus zu starten:
 
 	python manage.py runserver
