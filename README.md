@@ -21,10 +21,16 @@ Am einfachsten installiert man alles über pip:
 Starten
 =======
 Folgende Befehle müssen im django_digisys/ Hauptordner ausgeführt werden:
-Um einen Datenbankadministrator zu erstellen:
+Installation der Umgebung:
+	
+	make
 
-	python manage.py createsuperuser
+Es wird ein virtenv Ordner erstellt, in dem alle Bibliotheken installiert sind. Um ihn zu benutzen muss
 
-Um django_digisys im Developer-Modus zu starten:
+	source virtenv/bin/activate
+
+ausgeführt werden.
+
+Danach kann man django_digisys im Developer-Modus starten:
 
 	python manage.py runserver
