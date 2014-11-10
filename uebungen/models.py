@@ -91,7 +91,7 @@ class Anwesenheitsliste(Student):
        
 class Abgabe(models.Model):
     student_A = models.ForeignKey('Student', related_name='abgabe_a')
-    student_B = models.ForeignKey('Student', related_name='abgabe_b')
+    student_B = models.ForeignKey('Student', related_name='abgabe_b', null=True, blank=True) # Abgaben, die nicht in zweier Gruppen abgegeben wurden
     SERIEN = tuple(map(lambda x: (x, "Serie " + str(x)), range(1,13)))
     serie = models.IntegerField(choices=SERIEN)
     points = models.IntegerField(verbose_name = u'Punkte')
